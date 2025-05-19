@@ -14,17 +14,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * Each label (e.g., "HeartRate", "BloodPressure") is associated with a file in the specified base
  * directory. Records are appended to these files in a thread-safe manner using a {@link ConcurrentHashMap}.
  */
+//Renamed class to follow UpperCamelCase
 public class FileOutputStrategy implements OutputStrategy {
 
     /**
      * The base directory where all output files will be stored.
      */
+    //Renamed String to follow lowerCamelCase
     private String baseDirectory;
 
     /**
      * A thread-safe map to store and reuse file paths based on labels.
      * Keys are labels (e.g., "HeartRate"), values are full file paths.
      */
+    //Changed from public to private, and variable name to lowerCamelCase
     private final ConcurrentHashMap<String, String> fileMap = new ConcurrentHashMap<>();
 
     /**
@@ -59,6 +62,7 @@ public class FileOutputStrategy implements OutputStrategy {
         }
 
         // Compute or retrieve the file path for the given label
+        //Changed variable name to lowerCamelCase
         String filePath = fileMap.computeIfAbsent(label,
                 k -> Paths.get(baseDirectory, label + ".txt").toString());
 
