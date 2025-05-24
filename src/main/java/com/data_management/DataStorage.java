@@ -14,14 +14,32 @@ import com.data_management.FileDataReader;
  * patient IDs.
  */
 public class DataStorage {
+    // Singleton instance
+    private static DataStorage instance;
+
     private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
 
     /**
      * Constructs a new instance of DataStorage, initializing the underlying storage
      * structure.
+     *
+     * Made private to enforce Singleton pattern.
      */
-    public DataStorage() {
+    private DataStorage() {
         this.patientMap = new HashMap<>();
+    }
+
+    /**
+     * Provides access to the singleton instance of DataStorage.
+     * Ensures only one instance exists throughout the application.
+     *
+     * @return the single instance of DataStorage
+     */
+    public static synchronized DataStorage getInstance() {
+        if (instance == null) {
+            instance = new DataStorage();
+        }
+        return instance;
     }
 
     /**
@@ -80,22 +98,16 @@ public class DataStorage {
      * The main method for the DataStorage class.
      * Initializes the system, reads data into storage, and continuously monitors
      * and evaluates patient data.
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        // DataReader is not defined in this scope, should be initialized appropriately.
-        // DataReader reader = new SomeDataReaderImplementation("path/to/data");
-        DataStorage storage = new DataStorage();
+        // Use singleton instance instead of creating a new instance
+        DataStorage storage = DataStorage.getInstance();
 
-        // DataReader reader = new SomeDataReaderImplementation("path/to/data");
+        // DataReader is not defined in this scope, should be initialized appropriately.
         DataReader reader = new FileDataReader("path/to/output_dir");
         reader.readData(storage);
-
-
-        // Assuming the reader has been properly initialized and can read data into the
-        // storage
-        // reader.readData(storage);
 
         // Example of using DataStorage to retrieve and print records for a patient
         List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
