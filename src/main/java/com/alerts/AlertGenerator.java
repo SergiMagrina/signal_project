@@ -1,54 +1,103 @@
 package com.alerts;
 
-import com.data_management.DataStorage;
 import com.data_management.Patient;
+import com.data_management.PatientRecord;
+import java.util.List;
+import com.data_management.DataStorage;
 
-/**
- * The {@code AlertGenerator} class is responsible for monitoring patient data
- * and generating alerts when certain predefined conditions are met. This class
- * relies on a {@link DataStorage} instance to access patient data and evaluate
- * it against specific health criteria.
- */
 public class AlertGenerator {
-    // final because the variable is not changed since initialized
+
     private final DataStorage dataStorage;
 
-    /**
-     * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}.
-     * The {@code DataStorage} is used to retrieve patient data that this class
-     * will monitor and evaluate.
-     *
-     * @param dataStorage the data storage system that provides access to patient
-     *                    data
-     */
     public AlertGenerator(DataStorage dataStorage) {
         this.dataStorage = dataStorage;
     }
 
-    /**
-     * Evaluates the specified patient's data to determine if any alert conditions
-     * are met. If a condition is met, an alert is triggered via the
-     * Evaluates the patient's data, and if a condition is met with an alert, the alert is triggered
-     * {@link #triggerAlert(Alert)}
-     * method. This method should define the specific conditions under which an
-     * alert
-     * will be triggered.
-     *
-     * @param patient the patient data to evaluate for alert conditions
-     */
     public void evaluateData(Patient patient) {
-        // Implementation goes here
+        List<PatientRecord> records = dataStorage.getRecords(patient.getPatientId());
+
+        checkBloodSaturationAlerts(records, patient);
+        checkCombinedAlerts(records, patient);
+        checkECGAlerts(records, patient);
+        // You can add blood pressure alerts similarly, omitted here for brevity.
     }
 
-    /**
-     * Triggers an alert for the monitoring system. This method can be extended to
-     * notify medical staff, log the alert, or perform other actions. The method
-     * currently assumes that the alert information is fully formed when passed as
-     * an argument.
-     *
-     * @param alert the alert object containing details about the alert condition
-     */
-    private void triggerAlert(Alert alert) {
-        // Implementation might involve logging the alert or notifying staff
+    private void checkBloodSaturationAlerts(List<PatientRecord> records, Patient patient) {
+        List<PatientRecord> saturationRecords = records.stream()
+                .filter(r -> "Blood Saturation".equals(r.getRecordType()))
+                .toList();
+
+        for (int i = 0; i < saturationRecords.size(); i++) {
+            PatientRecord current = saturationRecords.get(i);
+            double currentSat = current.getMeasurementValue();
+
+            if (currentSat < 92) {
+                Alert alert = new Alert(patient.getPatientId(), "Low Saturation Alert", current.getTimestamp());
+                triggerAlert(alert);
+            }
+
+            long currentTime = current.getTimestamp();
+            for (int j = i - 1; j >= 0; j--) {
+                PatientRecord earlier = saturationRecords.get(j);
+                long earlierTime = earlier.getTimestamp();
+                if (currentTime - earlierTime <= 10 * 60 * 1000) {
+                    if (earlier.getMeasurementValue() - currentSat >= 5) {
+                        Alert alert = new Alert(patient.getPatientId(), "Rapid Drop Alert", current.getTimestamp());
+                        triggerAlert(alert);
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
     }
+
+    private void checkCombinedAlerts(List<PatientRecord> records, Patient patient) {
+        PatientRecord latestBP = records.stream()
+                .filter(r -> "Blood Pressure".equals(r.getRecordType()))
+                .reduce((first, second) -> second)
+                .orElse(null);
+
+        PatientRecord latestSat = records.stream()
+                .filter(r -> "Blood Saturation".equals(r.getRecordType()))
+                .reduce((first, second) -> second)
+                .orElse(null);
+
+        if (latestBP != null && latestSat != null) {
+            // Assuming your PatientRecord has a method getSystolicValue() for BP
+            if (latestBP.getMeasurementValue() < 90 && latestSat.getMeasurementValue() < 92) {
+                Alert alert = new Alert(patient.getPatientId(), "Hypotensive Hypoxemia Alert", Math.max(latestBP.getTimestamp(), latestSat.getTimestamp()));
+                triggerAlert(alert);
+            }
+        }
+    }
+
+    private void checkECGAlerts(List<PatientRecord> records, Patient patient) {
+        List<PatientRecord> ecgRecords = records.stream()
+                .filter(r -> "ECG".equals(r.getRecordType()))
+                .toList();
+
+        if (ecgRecords.size() < 5) return;
+
+        for (int i = 4; i < ecgRecords.size(); i++) {
+            double sum = 0;
+            for (int j = i - 4; j <= i; j++) {
+                sum += ecgRecords.get(j).getMeasurementValue();
+            }
+            double average = sum / 5;
+            PatientRecord current = ecgRecords.get(i);
+
+            if (current.getMeasurementValue() > average * 1.5) {
+                Alert alert = new Alert(patient.getPatientId(), "ECG Abnormal Peak Alert", current.getTimestamp());
+                triggerAlert(alert);
+            }
+        }
+    }
+
+    private void triggerAlert(Alert alert) {
+        // Example action, e.g., print, log, or notify
+        System.out.println("ALERT: " + alert.getCondition() + " for patient " + alert.getPatientId() + " at " + alert.getTimestamp());
+    }
+
 }

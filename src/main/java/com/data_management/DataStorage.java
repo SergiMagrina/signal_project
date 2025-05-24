@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
+import com.data_management.FileDataReader;
 
 /**
  * Manages storage and retrieval of patient data within a healthcare monitoring
@@ -86,6 +87,11 @@ public class DataStorage {
         // DataReader is not defined in this scope, should be initialized appropriately.
         // DataReader reader = new SomeDataReaderImplementation("path/to/data");
         DataStorage storage = new DataStorage();
+
+        // DataReader reader = new SomeDataReaderImplementation("path/to/data");
+        DataReader reader = new FileDataReader("path/to/output_dir");
+        reader.readData(storage);
+
 
         // Assuming the reader has been properly initialized and can read data into the
         // storage
