@@ -14,7 +14,7 @@ public class AlertGenerator {
     }
 
     public void evaluateData(Patient patient) {
-        List<PatientRecord> records = dataStorage.getRecords(patient.getPatientId());
+        List<PatientRecord> records = dataStorage.getRecords(patient.getPatientId(), 0, Long.MAX_VALUE);
 
         checkBloodSaturationAlerts(records, patient);
         checkCombinedAlerts(records, patient);
