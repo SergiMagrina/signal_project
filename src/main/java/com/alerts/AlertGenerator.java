@@ -96,7 +96,7 @@ public class AlertGenerator {
         }
     }
 
-    private void triggerAlert(Alert alert) {
+    protected void triggerAlert(Alert alert) {
         // Example action, e.g., print, log, or notify
         System.out.println("ALERT: " + alert.getCondition() + " for patient " + alert.getPatientId() + " at " + alert.getTimestamp());
     }

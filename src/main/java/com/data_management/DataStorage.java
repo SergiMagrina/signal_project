@@ -24,9 +24,8 @@ public class DataStorage {
      * Constructs a new instance of DataStorage, initializing the underlying storage
      * structure.
      *
-     * Made private to enforce Singleton pattern.
      */
-    private DataStorage() {
+    public DataStorage() {
         this.patientMap = new HashMap<>();
     }
 
@@ -126,6 +125,10 @@ public class DataStorage {
             System.err.println("Error reading data: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void clear() {
+        patientMap.clear();
     }
 
 }
