@@ -19,7 +19,7 @@ public class AlertGenerator implements PatientDataGenerator {
     /**
      * Random number generator used for simulating stochastic behavior.
      */
-    public static final Random randomGenerator = new Random();
+    public static Random randomGenerator = new Random();
 
     /**
      * Tracks the current alert state of each patient.
