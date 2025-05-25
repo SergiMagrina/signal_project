@@ -3,6 +3,7 @@ package com.Strategy;
 import java.util.List;
 import com.data_management.PatientRecord;
 import com.alerts.Alert;
+import java.util.stream.Collectors;
 
 public class HeartRateStrategy implements AlertStrategy {
 
@@ -11,7 +12,7 @@ public class HeartRateStrategy implements AlertStrategy {
         // Filter heart rate records
         List<PatientRecord> hrRecords = records.stream()
                 .filter(r -> "Heart Rate".equals(r.getRecordType()))
-                .toList();
+                .collect(Collectors.toList());
 
         for (PatientRecord record : hrRecords) {
             double hr = record.getMeasurementValue();

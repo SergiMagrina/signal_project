@@ -4,6 +4,7 @@ import java.util.List;
 import com.data_management.PatientRecord;
 import com.alerts.Alert;
 import com.Factory.BloodPressureAlert;
+import java.util.stream.Collectors;
 
 public class BloodPressureStrategy implements AlertStrategy {
 
@@ -12,7 +13,7 @@ public class BloodPressureStrategy implements AlertStrategy {
         // Filter blood pressure records
         List<PatientRecord> bpRecords = records.stream()
                 .filter(r -> "Blood Pressure".equals(r.getRecordType()))
-                .toList();
+                .collect(Collectors.toList());
 
         for (PatientRecord record : bpRecords) {
             if (record.getMeasurementValue() < 90) {

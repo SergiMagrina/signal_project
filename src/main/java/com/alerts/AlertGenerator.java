@@ -4,6 +4,7 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
 import com.data_management.DataStorage;
+import java.util.stream.Collectors;
 
 public class AlertGenerator {
 
@@ -25,7 +26,7 @@ public class AlertGenerator {
     private void checkBloodSaturationAlerts(List<PatientRecord> records, Patient patient) {
         List<PatientRecord> saturationRecords = records.stream()
                 .filter(r -> "Blood Saturation".equals(r.getRecordType()))
-                .toList();
+                .collect(Collectors.toList());
 
         for (int i = 0; i < saturationRecords.size(); i++) {
             PatientRecord current = saturationRecords.get(i);
@@ -76,7 +77,7 @@ public class AlertGenerator {
     private void checkECGAlerts(List<PatientRecord> records, Patient patient) {
         List<PatientRecord> ecgRecords = records.stream()
                 .filter(r -> "ECG".equals(r.getRecordType()))
-                .toList();
+                .collect(Collectors.toList());
 
         if (ecgRecords.size() < 5) return;
 

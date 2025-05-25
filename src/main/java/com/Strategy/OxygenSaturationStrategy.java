@@ -3,6 +3,7 @@ package com.Strategy;
 import java.util.List;
 import com.data_management.PatientRecord;
 import com.alerts.Alert;
+import java.util.stream.Collectors;
 
 public class OxygenSaturationStrategy implements AlertStrategy {
 
@@ -11,7 +12,7 @@ public class OxygenSaturationStrategy implements AlertStrategy {
         // Filter oxygen saturation records
         List<PatientRecord> satRecords = records.stream()
                 .filter(r -> "Blood Saturation".equals(r.getRecordType()))
-                .toList();
+                .collect(Collectors.toList());
 
         for (PatientRecord record : satRecords) {
             if (record.getMeasurementValue() < 92) {
