@@ -62,6 +62,10 @@ public class DataStorage {
             patientMap.put(patientId, patient);
         }
         patient.addRecord(measurementValue, recordType, timestamp);
+        synchronized (this) {
+            Patient patient = patientData.computeIfAbsent(patientId, Patient::new);
+            patient.addHealthData(label, value, timestamp);  // should update or append intelligently
+        }
     }
 
     /**
