@@ -1,4 +1,4 @@
-package com.Decorator;
+package com.decorator;
 
 public abstract class AlertDecorator implements Alert {
     protected Alert wrappedAlert;
@@ -27,4 +27,3 @@ public abstract class AlertDecorator implements Alert {
         wrappedAlert.trigger();
     }
 }
-

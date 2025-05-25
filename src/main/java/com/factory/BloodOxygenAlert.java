@@ -1,4 +1,4 @@
-package com.Factory;
+package com.factory;
 
 import com.alerts.Alert;
 

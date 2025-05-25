@@ -1,4 +1,4 @@
-package com.Decorator;
+package com.decorator;
 
 import java.util.Timer;
 import java.util.TimerTask;

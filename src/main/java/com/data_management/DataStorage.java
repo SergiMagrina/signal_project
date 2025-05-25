@@ -102,11 +102,8 @@ public class DataStorage {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        try {
-            DataStorage storage = DataStorage.getInstance();
 
-            DataReader reader = new FileDataReader("path/to/output_dir");
-            reader.readData(storage);
+            DataStorage storage = DataStorage.getInstance();
 
             List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
             for (PatientRecord record : records) {
@@ -121,10 +118,7 @@ public class DataStorage {
                 alertGenerator.evaluateData(patient);
             }
 
-        } catch (IOException e) {
-            System.err.println("Error reading data: " + e.getMessage());
-            e.printStackTrace();
-        }
+
     }
 
     public void clear() {

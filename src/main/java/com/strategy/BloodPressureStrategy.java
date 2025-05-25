@@ -1,23 +1,23 @@
-package com.Strategy;
+package com.strategy;
 
 import java.util.List;
 import com.data_management.PatientRecord;
 import com.alerts.Alert;
+import com.factory.BloodPressureAlert;
 import java.util.stream.Collectors;
 
-public class HeartRateStrategy implements AlertStrategy {
+public class BloodPressureStrategy implements AlertStrategy {
 
     @Override
     public void checkAlert(int patientId, List<PatientRecord> records) {
-        // Filter heart rate records
-        List<PatientRecord> hrRecords = records.stream()
-                .filter(r -> "Heart Rate".equals(r.getRecordType()))
+        // Filter blood pressure records
+        List<PatientRecord> bpRecords = records.stream()
+                .filter(r -> "Blood Pressure".equals(r.getRecordType()))
                 .collect(Collectors.toList());
 
-        for (PatientRecord record : hrRecords) {
-            double hr = record.getMeasurementValue();
-            if (hr < 50 || hr > 100) {  // example thresholds
-                Alert alert = new Alert(patientId, "Abnormal Heart Rate", record.getTimestamp());
+        for (PatientRecord record : bpRecords) {
+            if (record.getMeasurementValue() < 90) {
+                Alert alert = new BloodPressureAlert(patientId, "Low Blood Pressure", record.getTimestamp());
                 triggerAlert(alert);
             }
         }

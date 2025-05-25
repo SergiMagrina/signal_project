@@ -13,7 +13,6 @@ public class FileDataReader implements DataReader {
         this.outputDir = outputDir;
     }
 
-    @Override
     public void readData(DataStorage storage) {
         File dir = new File(outputDir);
         if (!dir.exists() || !dir.isDirectory()) {
@@ -60,5 +59,17 @@ public class FileDataReader implements DataReader {
             System.err.println("Error reading file " + file.getName() + ": " + e.getMessage());
         }
     }
+    @Override
+    public void stopListening() throws IOException {
+
+    }
+    @Override
+    public void startListening(DataStorage storage) {
+        readData(storage); // or leave empty if it's unused
+    }
+
+
+
+
 }
 

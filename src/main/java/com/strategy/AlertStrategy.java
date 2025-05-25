@@ -1,4 +1,4 @@
-package com.Strategy;
+package com.strategy;
 
 public interface AlertStrategy {
     /**

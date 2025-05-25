@@ -1,23 +1,22 @@
-package com.Strategy;
+package com.strategy;
 
 import java.util.List;
 import com.data_management.PatientRecord;
 import com.alerts.Alert;
-import com.Factory.BloodPressureAlert;
 import java.util.stream.Collectors;
 
-public class BloodPressureStrategy implements AlertStrategy {
+public class OxygenSaturationStrategy implements AlertStrategy {
 
     @Override
     public void checkAlert(int patientId, List<PatientRecord> records) {
-        // Filter blood pressure records
-        List<PatientRecord> bpRecords = records.stream()
-                .filter(r -> "Blood Pressure".equals(r.getRecordType()))
+        // Filter oxygen saturation records
+        List<PatientRecord> satRecords = records.stream()
+                .filter(r -> "Blood Saturation".equals(r.getRecordType()))
                 .collect(Collectors.toList());
 
-        for (PatientRecord record : bpRecords) {
-            if (record.getMeasurementValue() < 90) {
-                Alert alert = new BloodPressureAlert(patientId, "Low Blood Pressure", record.getTimestamp());
+        for (PatientRecord record : satRecords) {
+            if (record.getMeasurementValue() < 92) {
+                Alert alert = new Alert(patientId, "Low Oxygen Saturation", record.getTimestamp());
                 triggerAlert(alert);
             }
         }

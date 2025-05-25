@@ -1,4 +1,4 @@
-package com.Decorator;
+package com.decorator;
 
 public class PriorityAlertDecorator extends AlertDecorator {
 
